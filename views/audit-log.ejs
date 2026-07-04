@@ -1,0 +1,70 @@
+<%- include('partials/header') %>
+  <%- include('partials/sidebar') %>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+        <h6 class="fw-bold mb-0">
+          <i class="fa-solid fa-clipboard-list text-info me-2"></i>Riwayat Seluruh Aktivitas Admin Panel
+        </h6>
+        <a href="/admin-panel" class="btn btn-sm btn-outline-secondary">
+          <i class="fa-solid fa-arrow-left me-1"></i>Kembali
+        </a>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" style="font-size:13px;">
+            <thead class="table-light">
+              <tr>
+                <th class="px-3" width="25%">Waktu</th>
+                <th width="25%">Jenis Aksi</th>
+                <th width="50%">Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!auditLogs || auditLogs.length===0) { %>
+                <tr>
+                  <td colspan="3" class="text-center text-muted py-4">
+                    <i class="fa-regular fa-file-lines fa-2x mb-2 d-block"></i>
+                    Belum ada aktivitas admin yang tercatat.
+                  </td>
+                </tr>
+                <% } else { %>
+                  <% auditLogs.forEach(log=> { %>
+                    <tr>
+                      <td class="px-3 text-muted small">
+                        <%= log.waktu %>
+                      </td>
+                      <td>
+                        <% if (log.aksi.includes('HAPUS')) { %>
+                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle badge-log">
+                            <i class="fa-solid fa-trash me-1"></i>
+                            <%= log.aksi %>
+                          </span>
+                          <% } else if (log.aksi.includes('TAMBAH')) { %>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle badge-log">
+                              <i class="fa-solid fa-plus me-1"></i>
+                              <%= log.aksi %>
+                            </span>
+                            <% } else { %>
+                              <span class="badge bg-warning-subtle text-warning border border-warning-subtle badge-log">
+                                <i class="fa-solid fa-pen me-1"></i>
+                                <%= log.aksi %>
+                              </span>
+                              <% } %>
+                      </td>
+                      <td class="text-muted small">
+                        <%= JSON.stringify(log.detail) %>
+                      </td>
+                    </tr>
+                    <% }) %>
+                      <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer bg-white border-top py-2 px-3">
+        <small class="text-muted">Total: <%= auditLogs.length %> entri tercatat.</small>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>

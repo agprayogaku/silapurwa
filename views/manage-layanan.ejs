@@ -1,0 +1,108 @@
+<%- include('partials/header') %>
+  <%- include('partials/sidebar') %>
+
+    <form action="/admin-panel/layanan/update-jadwal" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <!-- Jadwal kunjungan -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+          <h6 class="fw-bold mb-0">
+            <i class="fa-solid fa-clock text-primary me-2"></i>Konfigurasi Sesi Kunjungan Fisik
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+
+            <!-- Tahanan -->
+            <div class="col-md-6">
+              <h6 class="fw-semibold text-secondary mb-3">
+                <i class="fa-solid fa-lock me-1"></i> Tahanan (Senin & Rabu)
+              </h6>
+              <div class="mb-3">
+                <label class="form-label small">Jam Sesi I</label>
+                <input type="text" class="form-control form-control-sm" name="tahanan_sesi_1"
+                  value="<%= jadwal.jadwal_kunjungan.tahanan.sesi_1 %>" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small">Jam Sesi II</label>
+                <input type="text" class="form-control form-control-sm" name="tahanan_sesi_2"
+                  value="<%= jadwal.jadwal_kunjungan.tahanan.sesi_2 %>" required>
+              </div>
+            </div>
+
+            <!-- Narapidana -->
+            <div class="col-md-6">
+              <h6 class="fw-semibold text-secondary mb-3">
+                <i class="fa-solid fa-lock-open me-1"></i> Narapidana (Selasa & Kamis)
+              </h6>
+              <div class="mb-3">
+                <label class="form-label small">Jam Sesi I</label>
+                <input type="text" class="form-control form-control-sm" name="narapidana_sesi_1"
+                  value="<%= jadwal.jadwal_kunjungan.narapidana.sesi_1 %>" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small">Jam Sesi II</label>
+                <input type="text" class="form-control form-control-sm" name="narapidana_sesi_2"
+                  value="<%= jadwal.jadwal_kunjungan.narapidana.sesi_2 %>" required>
+              </div>
+            </div>
+
+            <!-- Sabtu -->
+            <div class="col-12">
+              <hr class="my-0">
+            </div>
+            <div class="col-12">
+              <h6 class="fw-semibold text-secondary mb-3">
+                <i class="fa-solid fa-calendar-day me-1"></i> Ketentuan Hari Sabtu
+              </h6>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small">Ketentuan Tahanan</label>
+              <input type="text" class="form-control form-control-sm" name="sabtu_tahanan"
+                value="<%= jadwal.jadwal_kunjungan.khusus_sabtu.tahanan %>" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small">Ketentuan Narapidana</label>
+              <input type="text" class="form-control form-control-sm" name="sabtu_napi"
+                value="<%= jadwal.jadwal_kunjungan.khusus_sabtu.narapidana %>" required>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Titipan & finansial -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+          <h6 class="fw-bold mb-0">
+            <i class="fa-solid fa-box-open text-warning me-2"></i>Jam Layanan Titipan & Aturan Finansial
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Waktu Layanan Penitipan Barang Non-Makanan</label>
+            <input type="text" class="form-control form-control-sm" name="titipan_non_makanan"
+              value="<%= jadwal.titipan_non_makanan %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Prosedur Penitipan Uang</label>
+            <textarea class="form-control form-control-sm" name="titipan_uang" rows="3"
+              required><%= jadwal.titipan_uang %></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tombol simpan -->
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="/admin-panel" class="btn btn-outline-secondary">
+          <i class="fa-solid fa-arrow-left me-1"></i>Kembali
+        </a>
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="fa-solid fa-floppy-disk me-2"></i>Simpan Seluruh Perubahan
+        </button>
+      </div>
+
+    </form>
+
+    <%- include('partials/footer') %>

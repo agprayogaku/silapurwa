@@ -1,0 +1,17 @@
+[
+  {
+    "id": "faq_1",
+    "pertanyaan": "Apakah kunjungan memerlukan biaya?",
+    "jawaban": "Tidak. Seluruh layanan di Lapas Kelas IIB Purwakarta, termasuk layanan kunjungan dan pengurusan integrasi (PB/CB), sama sekali TIDAK DIPUNGUT BIAYA alias GRATIS."
+  },
+  {
+    "id": "faq_2",
+    "pertanyaan": "Berapa kali WBP dapat dikunjungi dalam sehari?",
+    "jawaban": "Setiap Warga Binaan Pemasyarakatan (WBP) mendapatkan kesempatan dikunjungi oleh keluarga sebanyak 1 (satu) kali dalam sehari sesuai jadwal blok pidananya."
+  },
+  {
+    "id": "faq_3",
+    "pertanyaan": "Apakah teman atau pacar boleh berkunjung?",
+    "jawaban": "Sesuai regulasi keamanan saat ini, kunjungan fisik diutamakan untuk keluarga inti yang terdaftar di Kartu Keluarga (KK). Untuk pihak luar di luar keluarga inti, wajib membawa surat izin khusus dari instansi penahan (jika masih status tahanan) atau persetujuan Kepala Lapas."
+  }
+]

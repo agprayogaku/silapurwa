@@ -1,0 +1,13 @@
+{
+  "watch": [
+    "src/",
+    "app.js"
+  ],
+  "ext": "js,json,html",
+  "ignore": [
+    "session/*",
+    "data/*",
+    ".env",
+    "node_modules/*"
+  ]
+}

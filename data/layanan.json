@@ -1,0 +1,43 @@
+{
+  "syarat_kunjungan": {
+    "umum": [
+      "Pengunjung merupakan keluarga inti dari Warga Binaan Pemasyarakatan (WBP) yang dibuktikan dengan Kartu Keluarga (KK).",
+      "Wajib membawa dan menunjukkan identitas diri asli (E-KTP, SIM, atau Paspor).",
+      "Wajib berpakaian sopan dan tertutup. Pria: baju sopan & celana panjang. Wanita: baju sopan & tidak menggunakan rok.",
+      "Maksimal 4 orang pengunjung dalam satu sesi untuk setiap WBP.",
+      "Wajib mematuhi batas waktu kunjungan, memelihara keamanan, ketertiban, serta bersikap sopan."
+    ],
+    "catatan_tahanan": "Bagi pengunjung TAHANAN, WAJIB disertai surat izin mengunjungi yang sah dari pihak penahan (Kepolisian, Kejaksaan, Pengadilan, Polisi Militer, Bea Cukai, atau Imigrasi).",
+    "prosedur_keamanan": [
+      "Pengunjung dan barang bawaan akan digeledah secara ketat oleh petugas Lapas Kelas IIB Purwakarta.",
+      "Wajib menitipkan alat elektronik (Handphone, Charger, Headset, Power Bank, dll).",
+      "Dilarang membawa barang pecah belah atau bahan yang mudah terbakar."
+    ]
+  },
+  "penitipan_barang": {
+    "larangan": [
+      "Alat elektronik (handphone, laptop, charger, kamera, dll)",
+      "Senjata api, senjata tajam, dan barang berbahaya sejenisnya",
+      "Narkotika dan obat-obatan terlarang (Pelanggaran akan diproses hukum!)",
+      "Minuman keras, minuman beralkohol, air mineral botolan, minuman kemasan/serbuk/sachet/beku/berperisa",
+      "Kopi, gula pasir, garam, dan serbuk sejenis",
+      "Kacang-kacangan, pilus, sukro, dan sejenisnya",
+      "Makanan berbau menyengat (jengkol, petai, dll)",
+      "Buah-buahan utuh (kecuali sudah dipotong kecil)",
+      "Rokok, ikat pinggang, dan topi",
+      "Pembalut, sarung, sprei, tambang, tali, atau kain panjang sejenis",
+      "Pasta gigi dan sikat gigi yang memiliki gagang keras",
+      "Sedotan, barang mengandung aluminum foil, serta bahan gelas/kaca"
+    ],
+    "ketentuan_lain": [
+      "Nasi dan lauk pauk ukuran sedang maksimal 2 (dua) buah.",
+      "Makanan ringan wajib dikemas ulang menggunakan plastik transparan.",
+      "Pakaian maksimal 2 pasang dengan sistem tukar ganti (ditukar dengan pakaian lama yang telah digunakan WBP).",
+      "Alat mandi (sabun & shampoo) hanya diizinkan dalam bentuk sachet atau dipindahkan ke plastik transparan.",
+      "Penitipan uang tunai langsung ke petugas layanan maksimal Rp500.000,-."
+    ]
+  },
+  "layanan_integrasi": {
+    "status": "Dalam pembaruan data oleh bagian Registrasi Lapas Purwakarta. Silakan hubungi admin manual jika ada pertanyaan mendesak."
+  }
+}

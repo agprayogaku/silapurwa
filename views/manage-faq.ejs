@@ -1,0 +1,141 @@
+<%- include('partials/header') %>
+  <%- include('partials/sidebar') %>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+        <h6 class="fw-bold mb-0">
+          <i class="fa-solid fa-circle-question text-primary me-2"></i>Daftar Pertanyaan Otomatis Chatbot
+        </h6>
+        <div class="d-flex gap-2">
+          <a href="/admin-panel" class="btn btn-sm btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i>Kembali
+          </a>
+          <button class="btn btn-sm btn-success px-3" data-bs-toggle="modal" data-bs-target="#addFaqModal">
+            <i class="fa-solid fa-plus me-1"></i>Tambah FAQ
+          </button>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" style="font-size:13px;">
+            <thead class="table-light">
+              <tr>
+                <th class="px-3" width="5%">No</th>
+                <th width="28%">Kata Kunci Pemicu</th>
+                <th width="47%">Template Respons Bot</th>
+                <th class="text-center" width="20%">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!faq || faq.length===0) { %>
+                <tr>
+                  <td colspan="4" class="text-center text-muted py-4">
+                    <i class="fa-regular fa-folder-open fa-2x mb-2 d-block"></i>
+                    Belum ada data FAQ. Tambahkan entri pertama.
+                  </td>
+                </tr>
+                <% } else { %>
+                  <% faq.forEach((item, index)=> { %>
+                    <tr>
+                      <td class="px-3 text-muted">
+                        <%= index + 1 %>
+                      </td>
+                      <td>
+                        <span class="badge bg-secondary-subtle text-dark border px-2 py-1">
+                          <%= item.pertanyaan %>
+                        </span>
+                      </td>
+                      <td class="text-muted small">
+                        <%= item.jawaban.substring(0, 90) %>
+                          <%= item.jawaban.length> 90 ? '...' : '' %>
+                      </td>
+                      <td class="text-center">
+                        <div class="btn-group btn-group-sm">
+                          <button class="btn btn-outline-primary" title="Ubah" data-bs-toggle="modal"
+                            data-bs-target="#editFaqModal<%= index %>">
+                            <i class="fa-solid fa-pencil"></i>
+                          </button>
+                          <form action="/admin-panel/faq/delete/<%= item.id %>" method="POST" class="d-inline"
+                            onsubmit="return confirm('Yakin ingin menghapus FAQ ini?')">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" class="btn btn-outline-danger" title="Hapus">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Modal Edit -->
+                    <div class="modal fade" id="editFaqModal<%= index %>" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title fw-bold">Ubah Data FAQ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                          </div>
+                          <form action="/admin-panel/faq/update/<%= item.id %>" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <div class="modal-body">
+                              <div class="mb-3">
+                                <label class="form-label fw-semibold small">Kata Kunci Pemicu</label>
+                                <input type="text" class="form-control form-control-sm" name="pertanyaan"
+                                  value="<%= item.pertanyaan %>" required>
+                                <div class="form-text">Gunakan huruf kecil tanpa tanda baca.</div>
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label fw-semibold small">Isi Respons Bot</label>
+                                <textarea class="form-control form-control-sm" name="jawaban" rows="5"
+                                  required><%= item.jawaban %></textarea>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary btn-sm"
+                                data-bs-dismiss="modal">Batal</button>
+                              <button type="submit" class="btn btn-primary btn-sm">Simpan Perubahan</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <% }) %>
+                      <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Tambah FAQ -->
+    <div class="modal fade" id="addFaqModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Tambah FAQ Baru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <form action="/admin-panel/faq/create" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">Kata Kunci / Pertanyaan Pemicu</label>
+                <input type="text" class="form-control form-control-sm" name="pertanyaan"
+                  placeholder="contoh: lokasi lapas" required>
+                <div class="form-text">Bot mencocokkan jika pesan user mengandung kata ini.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">Isi Respons Jawaban Bot</label>
+                <textarea class="form-control form-control-sm" name="jawaban" rows="5"
+                  placeholder="Tuliskan isi jawaban otomatis..." required></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-success btn-sm">Simpan Data</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>

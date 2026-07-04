@@ -1,0 +1,88 @@
+<nav class="app-header navbar navbar-expand">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+          <i class="fa-solid fa-bars"></i>
+        </a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ms-auto me-2 d-flex flex-row align-items-center gap-3">
+      <li class="nav-item d-none d-md-block">
+        <span class="text-muted" style="font-size:13px;">
+          <i class="fa-regular fa-calendar me-1"></i>
+          <%= new Date().toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) %>
+        </span>
+      </li>
+      <li class="nav-item">
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"
+          style="font-size:12px;">
+          <i class="fa-solid fa-circle fa-2xs me-1"></i>Bot Aktif
+        </span>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<aside class="app-sidebar" data-bs-theme="light" data-enable-persistence="true">
+  <div class="sidebar-brand d-flex align-items-center gap-2">
+    <i class="fa-solid fa-shield-halved fa-lg text-primary"></i>
+    <div>
+      <div class="fw-bold text-dark" style="font-size:15px; line-height:1.2;">SILAPURWA</div>
+      <div style="font-size:10px; color:#adb5bd; line-height:1.2;">Lapas Kelas IIB Purwakarta</div>
+    </div>
+  </div>
+
+  <div class="sidebar-wrapper">
+    <nav class="mt-2 px-2">
+      <ul class="nav nav-sidebar flex-column" role="menu">
+
+        <li class="nav-header">Menu Utama</li>
+        <li class="nav-item">
+          <a href="/admin-panel" class="nav-link <%= title === 'Dashboard SILAPURWA' ? 'active' : '' %>">
+            <i class="nav-icon fa-solid fa-gauge"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+
+        <li class="nav-header mt-1">Pengelolaan Data</li>
+        <li class="nav-item">
+          <a href="/admin-panel/faq" class="nav-link <%= title === 'Kelola FAQ' ? 'active' : '' %>">
+            <i class="nav-icon fa-solid fa-circle-question"></i>
+            <p>Kelola FAQ</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/admin-panel/layanan" class="nav-link <%= title === 'Kelola Layanan' ? 'active' : '' %>">
+            <i class="nav-icon fa-solid fa-calendar-days"></i>
+            <p>Jadwal &amp; Aturan</p>
+          </a>
+        </li>
+
+        <li class="nav-header mt-1">Monitoring</li>
+        <li class="nav-item">
+          <a href="/admin-panel/audit-log" class="nav-link <%= title === 'Riwayat Aktivitas Admin' ? 'active' : '' %>">
+            <i class="nav-icon fa-solid fa-clipboard-list"></i>
+            <p>Riwayat Aktivitas</p>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+
+  <div class="px-3 py-2 border-top" style="font-size:11px; color:#adb5bd;">
+    SILAPURWA v2.0.0 &mdash; Aktualisasi CPNS 2026
+  </div>
+</aside>
+
+<main class="app-main">
+  <div class="app-content-header py-3 px-4 bg-white border-bottom">
+    <div class="container-fluid">
+      <h4 class="mb-0 fw-semibold">
+        <%= title %>
+      </h4>
+    </div>
+  </div>
+  <div class="app-content p-4">
+    <div class="container-fluid">

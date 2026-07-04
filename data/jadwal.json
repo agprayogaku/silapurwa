@@ -1,0 +1,18 @@
+{
+  "jadwal_kunjungan": {
+    "tahanan": {
+      "sesi_1": "08.30 - 11.30 WIB",
+      "sesi_2": "13.00 - 14.00 WIB"
+    },
+    "narapidana": {
+      "sesi_1": "08.30 - 11.30 WIB",
+      "sesi_2": "13.00 - 14.00 WIB"
+    },
+    "khusus_sabtu": {
+      "tahanan": "Minggu ke-I, III, dan V (Hanya Sesi I: 08.30 - 11.30 WIB)",
+      "narapidana": "Minggu ke-II dan IV (Hanya Sesi I: 08.30 - 11.30 WIB)"
+    }
+  },
+  "titipan_non_makanan": "Terbuka setiap hari Senin s.d Kamis & Sabtu (Berlaku untuk Tahanan maupun Narapidana).",
+  "titipan_uang": "Dapat melalui transfer ke rekening BCA 2313030113 a.n Aulia R (Wajib konfirmasi via Japri ke Admin setelah transfer)."
+}
