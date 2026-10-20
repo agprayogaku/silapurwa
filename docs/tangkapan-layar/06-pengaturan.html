@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<!-- Tangkapan layar Silapurwa: /pengaturan (2026-10-20T10:48:34.414Z) -->
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Silapurwa Admin &mdash; Lapas Purwakarta</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1120;
+      --sidebar: #0f172a;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --surface-3: #263449;
+      --border: #1f2a3c;
+      --border-soft: #182234;
+      --text: #e6ebf2;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-soft: rgba(59, 130, 246, 0.14);
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --sidebar-w: 264px;
+      --ring: rgba(56, 189, 248, 0.35);
+    }
+
+    @media (max-width: 768px) {
+      html { font-size: 15px; }
+    }
+    @media (min-width: 769px) {
+      html { font-size: 17px; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .ikon { flex: 0 0 auto; }
+
+    /* ---------------- Layout ---------------- */
+    .app-shell { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 100;
+      transition: transform 0.25s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #1d4ed8);
+      color: #fff;
+      flex: 0 0 auto;
+    }
+    .brand-text { line-height: 1.2; }
+    .brand-title { font-weight: 700; font-size: 1.05rem; letter-spacing: 0.4px; color: #fff; }
+    .brand-sub { font-size: 0.78rem; color: var(--text-muted); }
+
+    .sidebar-nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+    .nav-label {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.9px;
+      color: var(--text-dim); padding: 0.5rem 0.9rem 0.4rem;
+    }
+    .sidebar-nav a {
+      position: relative;
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 0.2rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      transition: background 0.18s, color 0.18s;
+    }
+    .sidebar-nav a:hover { background: rgba(148, 163, 184, 0.1); color: var(--text); }
+    .sidebar-nav a.active {
+      background: var(--primary-soft);
+      color: #93c5fd;
+    }
+    .sidebar-nav a.active::before {
+      content: "";
+      position: absolute; left: 0; top: 20%; bottom: 20%;
+      width: 3px; border-radius: 0 3px 3px 0; background: var(--primary);
+    }
+
+    .sidebar-foot {
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.25rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .user-chip { display: flex; align-items: center; gap: 0.7rem; }
+    .user-avatar {
+      display: grid; place-items: center;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--surface-2); color: var(--accent); flex: 0 0 auto;
+    }
+    .user-name { font-weight: 600; font-size: 0.92rem; color: var(--text); }
+    .user-role { font-size: 0.75rem; color: var(--text-muted); text-transform: capitalize; }
+    .logout-link {
+      display: flex; align-items: center; gap: 0.55rem;
+      color: #fca5a5; text-decoration: none; font-weight: 500; font-size: 0.88rem;
+      padding: 0.5rem 0.6rem; border-radius: var(--radius-sm);
+      transition: background 0.18s;
+    }
+    .logout-link:hover { background: rgba(239, 68, 68, 0.12); }
+
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    @media (min-width: 769px) { .main { margin-left: var(--sidebar-w); } }
+
+    .topbar {
+      display: none;
+      align-items: center; justify-content: space-between;
+      gap: 0.75rem;
+      background: var(--sidebar);
+      border-bottom: 1px solid var(--border);
+      padding: 0.7rem 1rem;
+      position: sticky; top: 0; z-index: 90;
+    }
+    .icon-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+    }
+    .icon-btn:hover { background: var(--surface-3); }
+
+    .backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(2, 6, 23, 0.65); backdrop-filter: blur(2px); z-index: 95;
+    }
+    @media (max-width: 768px) {
+      .topbar { display: flex; }
+      .sidebar { transform: translateX(-100%); box-shadow: none; }
+      .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0, 0, 0, 0.6); }
+      .backdrop.open { display: block; }
+      .brand { padding: 1rem 1.1rem; }
+    }
+
+    .content { flex: 1; width: 100%; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 2rem 1.5rem 2.5rem; width: 100%; }
+    @media (max-width: 768px) { .container { padding: 1.1rem 1rem 2rem; } }
+
+    .site-foot {
+      text-align: center; font-size: 0.78rem; color: var(--text-dim);
+      padding: 1.5rem 1rem; border-top: 1px solid var(--border);
+    }
+
+    /* ---------------- Headings ---------------- */
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.2px; color: var(--text); }
+    h2 { font-size: 1.18rem; font-weight: 650; color: var(--text); margin-bottom: 0.25rem; }
+    h3 { font-size: 1.02rem; font-weight: 600; color: var(--text); }
+    .muted { color: var(--text-muted); }
+    .dim { color: var(--text-dim); }
+
+    .page-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end;
+      justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem;
+    }
+    .page-head .lead { color: var(--text-muted); font-size: 0.92rem; margin-top: 0.25rem; max-width: 70ch; }
+    .page-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+    /* ---------------- Cards ---------------- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      margin-bottom: 1.4rem;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .card-title { display: flex; align-items: center; gap: 0.55rem; font-weight: 650; font-size: 1.02rem; }
+    .card-title .ikon { color: var(--accent); }
+
+    /* ---------------- Grid & KPI ---------------- */
+    .grid { display: grid; gap: 1.1rem; margin-bottom: 1.4rem; }
+    .grid-kpi { grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-main { grid-template-columns: 2fr 1fr; align-items: start; }
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-main { grid-template-columns: 1fr; }
+    }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .kpi-top { display: flex; align-items: center; justify-content: space-between; }
+    .kpi-ico {
+      display: grid; place-items: center; width: 38px; height: 38px;
+      border-radius: 10px; background: var(--primary-soft); color: var(--accent);
+    }
+    .kpi-num { font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .kpi-label { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ---------------- Buttons ---------------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.55rem 1rem; font-size: 0.92rem; font-weight: 600;
+      border-radius: var(--radius-sm); cursor: pointer; text-decoration: none;
+      border: 1px solid transparent; transition: background 0.18s, border-color 0.18s, color 0.18s;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); }
+    .btn-danger { background: rgba(239, 68, 68, 0.14); color: #fca5a5; border-color: rgba(239, 68, 68, 0.35); }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.24); }
+    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.82rem; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-block { width: 100%; }
+
+    /* ---------------- Alerts ---------------- */
+    .alert {
+      display: flex; gap: 0.65rem; align-items: flex-start;
+      padding: 0.85rem 1rem; border-radius: var(--radius-sm);
+      margin-bottom: 1.2rem; font-size: 0.92rem; border: 1px solid transparent;
+    }
+    .alert-success { background: rgba(34, 197, 94, 0.1); color: #86efac; border-color: rgba(34, 197, 94, 0.3); }
+    .alert-danger { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .alert-info { background: rgba(56, 189, 248, 0.1); color: #7dd3fc; border-color: rgba(56, 189, 248, 0.3); }
+
+    /* ---------------- Tables ---------------- */
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { padding: 0.7rem 0.8rem; text-align: left; vertical-align: top; }
+    th {
+      background: var(--surface-2); color: var(--text-muted);
+      font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border-soft); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(148, 163, 184, 0.05); }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85em; background: var(--surface-2); padding: 0.1rem 0.4rem;
+      border-radius: 5px; color: #93c5fd;
+    }
+
+    /* ---------------- Badges ---------------- */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.18rem 0.6rem; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px; white-space: nowrap;
+    }
+    .badge-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .badge-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .badge-info { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; }
+    .badge-neutral { background: var(--surface-2); color: var(--text-muted); }
+
+    /* ---------------- Forms ---------------- */
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.4rem; color: var(--text); }
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea, select {
+      width: 100%; padding: 0.6rem 0.8rem;
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 0.95rem; font-family: inherit; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-dim); }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring);
+    }
+    textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+    select { appearance: none; background-image: none; }
+    .help-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; }
+
+    .form-actions {
+      border-top: 1px solid var(--border); padding-top: 1.1rem; margin-top: 0.5rem;
+      display: flex; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap;
+    }
+
+    /* ---------------- Settings ---------------- */
+    .settings-toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.4rem; }
+    .settings-toc a {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.8rem; padding: 0.35rem 0.75rem; border-radius: 999px;
+      background: var(--surface-2); color: var(--text-muted);
+      text-decoration: none; border: 1px solid var(--border);
+      transition: color 0.18s, border-color 0.18s;
+    }
+    .settings-toc a:hover { color: var(--text); border-color: var(--accent); }
+    .settings-block { scroll-margin-top: 84px; }
+    .settings-block .card-head { margin-bottom: 0.3rem; }
+    .settings-desc { font-size: 0.85rem; margin-bottom: 1.1rem; }
+    .settings-fields {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.15rem 1.25rem;
+    }
+    .settings-fields .form-group { margin-bottom: 0; }
+    .settings-fields .field-wide { grid-column: 1 / -1; }
+    .settings-fields label {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.35rem 0.6rem;
+    }
+    .settings-fields label span { min-width: 0; }
+    .key-chip {
+      font-weight: 400; font-size: 0.66rem; opacity: 0.75; white-space: nowrap;
+    }
+    .settings-savebar {
+      position: sticky; bottom: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      margin: 0 0 2rem; padding: 0.8rem 1rem;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: rgba(17, 24, 39, 0.92); backdrop-filter: blur(8px);
+    }
+    @media (max-width: 640px) {
+      .settings-savebar { flex-direction: column; align-items: stretch; }
+      .settings-savebar .btn { width: 100%; }
+    }
+
+    /* ---------------- Empty state ---------------- */
+    .empty {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      padding: 2rem 1rem; color: var(--text-muted); text-align: center;
+    }
+    .empty .ikon { color: var(--text-dim); }
+
+    /* ---------------- Login ---------------- */
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; width: 100%; }
+    .auth-card {
+      width: 100%; max-width: 420px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 16px; padding: 2.2rem;
+    }
+    .auth-brand { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin-bottom: 1.75rem; text-align: center; }
+    .auth-brand .brand-mark { width: 52px; height: 52px; border-radius: 14px; }
+    .auth-brand h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
+    .auth-note { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 1.4rem; }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 1.5rem; }
+      .page-head { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  
+  
+    <div class="app-shell">
+      <div class="backdrop" id="backdrop" onclick="toggleSidebar(false)"></div>
+
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <span class="brand-mark"><svg class="ikon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <span class="brand-text">
+            <span class="brand-title">SILAPURWA</span>
+            <span class="brand-sub">Lapas Purwakarta</span>
+          </span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Navigasi utama">
+          <div class="nav-label">Menu</div>
+          <a href="/" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg> Dashboard</a>
+          <a href="/faq" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg> Basis FAQ</a>
+          <a href="/eskalasi" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> Tiket Eskalasi</a>
+          <a href="/simulator" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg> Simulator Chat</a>
+          <a href="/whatsapp" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> WhatsApp</a>
+          <a href="/pengaturan" class="active"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Pengaturan</a>
+        </nav>
+
+        <div class="sidebar-foot">
+          <div class="user-chip">
+            <span class="user-avatar"><svg class="ikon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <span>
+              <span class="user-name">Administrator</span><br>
+              <span class="user-role">admin</span>
+            </span>
+          </div>
+          <a href="/auth/keluar" class="logout-link"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Keluar dari Sistem</a>
+        </div>
+      </aside>
+
+      <div class="main">
+        <div class="topbar">
+          <button class="icon-btn" type="button" onclick="toggleSidebar(true)" aria-label="Buka menu">
+            <svg class="ikon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg> Menu
+          </button>
+          <span class="brand-title" style="font-size: 0.98rem;">SILAPURWA</span>
+        </div>
+        <main class="content">
+          <div class="container">
+  
+
+  <script>
+    function toggleSidebar(buka) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+      if (!sidebar) return;
+      const akanBuka = (typeof buka === 'boolean')
+        ? buka
+        : !sidebar.classList.contains('open');
+      sidebar.classList.toggle('open', akanBuka);
+      if (backdrop) backdrop.classList.toggle('open', akanBuka);
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') toggleSidebar(false);
+    });
+  </script>
+
+
+<div class="page-head">
+  <div>
+    <h1>Pengaturan Sistem</h1>
+    <p class="lead">Konfigurasi dikelompokkan per bagian agar mudah ditinjau. Perubahan berlaku setelah tombol simpan ditekan.</p>
+  </div>
+</div>
+
+
+
+<nav class="settings-toc" aria-label="Lompat ke bagian pengaturan">
+  
+    <a href="#grup-identitas"><svg class="ikon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Identitas &amp; Sapaan</a>
+  
+    <a href="#grup-pesan"><svg class="ikon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg> Pesan Otomatis</a>
+  
+    <a href="#grup-penitipan"><svg class="ikon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Informasi Penitipan</a>
+  
+    <a href="#grup-pencocokan"><svg class="ikon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Pencocokan FAQ &amp; Ambang Batas</a>
+  
+    <a href="#grup-ai"><svg class="ikon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="8" width="16" height="12" rx="2"/><line x1="12" y1="4" x2="12" y2="8"/><circle cx="12" cy="3" r="1"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/><line x1="2" y1="13" x2="4" y2="13"/><line x1="20" y1="13" x2="22" y2="13"/></svg> Mesin AI (Gemini)</a>
+  
+    <a href="#grup-kanal"><svg class="ikon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Kanal &amp; Kecepatan Balasan</a>
+  
+</nav>
+
+<form method="POST" action="/pengaturan">
+  
+    <section class="card settings-block" id="grup-identitas">
+      <div class="card-head">
+        <div class="card-title"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Identitas &amp; Sapaan</div>
+        <span class="badge badge-neutral">4 pengaturan</span>
+      </div>
+
+      
+        <p class="muted settings-desc">Nama instansi, jam layanan, dan pesan pembuka yang diterima pengunjung.</p>
+      
+
+      <div class="settings-fields">
+        
+          <div class="form-group field-wide">
+            <label for="cfg_nama_instansi">
+              <span>Nama Instansi</span>
+              <code class="key-chip">nama_instansi</code>
+            </label>
+
+            
+              <input type="text" id="cfg_nama_instansi" name="cfg_nama_instansi" value="Lapas Kelas IIB Purwakarta">
+            
+
+            
+              <div class="help-text">Nama resmi instansi yang tampil pada pesan dan laporan.</div>
+            
+          </div>
+        
+          <div class="form-group field-wide">
+            <label for="cfg_sapaan_awal">
+              <span>Pesan Sapaan Awal</span>
+              <code class="key-chip">sapaan_awal</code>
+            </label>
+
+            
+              <textarea id="cfg_sapaan_awal" name="cfg_sapaan_awal" rows="3">Selamat datang di layanan informasi Lapas Kelas IIB Purwakarta. Silakan tanyakan jadwal kunjungan, penitipan uang, penitipan barang, atau tata tertib kunjungan.</textarea>
+            
+
+            
+              <div class="help-text">Dikirim saat pengunjung menyapa bot. Gunakan bahasa ramah dan singkat.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_jam_layanan_bot">
+              <span>Jam Layanan Bot</span>
+              <code class="key-chip">jam_layanan_bot</code>
+            </label>
+
+            
+              <input type="text" id="cfg_jam_layanan_bot" name="cfg_jam_layanan_bot" value="24 jam">
+            
+
+            
+              <div class="help-text">Contoh: 24 jam.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_jam_layanan_petugas">
+              <span>Jam Layanan Petugas</span>
+              <code class="key-chip">jam_layanan_petugas</code>
+            </label>
+
+            
+              <input type="text" id="cfg_jam_layanan_petugas" name="cfg_jam_layanan_petugas" value="Sesuai jadwal kunjungan">
+            
+
+            
+              <div class="help-text">Jam petugas manusia melayani tindak lanjut.</div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="card settings-block" id="grup-pesan">
+      <div class="card-head">
+        <div class="card-title"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg> Pesan Otomatis</div>
+        <span class="badge badge-neutral">2 pengaturan</span>
+      </div>
+
+      
+        <p class="muted settings-desc">Teks yang dikirim saat pertanyaan belum terjawab atau menyangkut data pribadi.</p>
+      
+
+      <div class="settings-fields">
+        
+          <div class="form-group field-wide">
+            <label for="cfg_pesan_fallback">
+              <span>Pesan Bila Belum Terjawab</span>
+              <code class="key-chip">pesan_fallback</code>
+            </label>
+
+            
+              <textarea id="cfg_pesan_fallback" name="cfg_pesan_fallback" rows="3">Mohon maaf Bapak/Ibu, pertanyaan tersebut belum tersedia pada sistem kami. Pertanyaan Anda telah dicatat untuk ditindaklanjuti petugas.</textarea>
+            
+
+            
+              <div class="help-text">Dikirim saat pertanyaan tidak cocok dengan FAQ dan dieskalasi ke petugas.</div>
+            
+          </div>
+        
+          <div class="form-group field-wide">
+            <label for="cfg_pesan_tolak_data_wbp">
+              <span>Pesan Penolakan Data Pribadi</span>
+              <code class="key-chip">pesan_tolak_data_wbp</code>
+            </label>
+
+            
+              <textarea id="cfg_pesan_tolak_data_wbp" name="cfg_pesan_tolak_data_wbp" rows="3">Mohon maaf Bapak/Ibu, data pribadi individu bersifat rahasia dan tidak dapat kami berikan.</textarea>
+            
+
+            
+              <div class="help-text">Dikirim saat pengunjung meminta data pribadi atau keberadaan WBP.</div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="card settings-block" id="grup-penitipan">
+      <div class="card-head">
+        <div class="card-title"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Informasi Penitipan</div>
+        <span class="badge badge-neutral">4 pengaturan</span>
+      </div>
+
+      
+        <p class="muted settings-desc">Rekening resmi, nomor konfirmasi, dan batas penitipan uang.</p>
+      
+
+      <div class="settings-fields">
+        
+          <div class="form-group">
+            <label for="cfg_bank_penitipan_nama">
+              <span>Nama Bank Penitipan</span>
+              <code class="key-chip">bank_penitipan_nama</code>
+            </label>
+
+            
+              <input type="text" id="cfg_bank_penitipan_nama" name="cfg_bank_penitipan_nama" value="BRI">
+            
+
+            
+              <div class="help-text">Nama bank resmi untuk penitipan uang.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_bank_penitipan_rekening">
+              <span>Nomor Rekening Penitipan</span>
+              <code class="key-chip">bank_penitipan_rekening</code>
+            </label>
+
+            
+              <input type="text" id="cfg_bank_penitipan_rekening" name="cfg_bank_penitipan_rekening" value="37340100033564">
+            
+
+            
+              <div class="help-text">Nomor rekening resmi yang boleh digunakan masyarakat.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_konfirmasi_penitipan_nomor">
+              <span>Nomor Konfirmasi Transfer</span>
+              <code class="key-chip">konfirmasi_penitipan_nomor</code>
+            </label>
+
+            
+              <input type="text" id="cfg_konfirmasi_penitipan_nomor" name="cfg_konfirmasi_penitipan_nomor" value="0852-8442-4304">
+            
+
+            
+              <div class="help-text">Nomor yang menghubungi pengunjung untuk konfirmasi transfer.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_batas_penitipan_uang">
+              <span>Batas Maksimal Penitipan Uang</span>
+              <code class="key-chip">batas_penitipan_uang</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_batas_penitipan_uang"
+                     name="cfg_batas_penitipan_uang"
+                     value="500000"
+                     step="1000"
+                     min="0"
+                     >
+            
+
+            
+              <div class="help-text">Dalam Rupiah. Contoh: 500000 untuk Rp500.000.</div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="card settings-block" id="grup-pencocokan">
+      <div class="card-head">
+        <div class="card-title"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Pencocokan FAQ &amp; Ambang Batas</div>
+        <span class="badge badge-neutral">3 pengaturan</span>
+      </div>
+
+      
+        <p class="muted settings-desc">Batas skor penentu jawaban langsung, klarifikasi, atau eskalasi ke petugas.</p>
+      
+
+      <div class="settings-fields">
+        
+          <div class="form-group">
+            <label for="cfg_ambang_jawab">
+              <span>Ambang Jawab Langsung</span>
+              <code class="key-chip">ambang_jawab</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_ambang_jawab"
+                     name="cfg_ambang_jawab"
+                     value="0.75"
+                     step="0.01"
+                     min="0"
+                     max="1">
+            
+
+            
+              <div class="help-text">Skor minimum agar FAQ dijawab langsung (disarankan 0,75).</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ambang_klarifikasi">
+              <span>Ambang Klarifikasi</span>
+              <code class="key-chip">ambang_klarifikasi</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_ambang_klarifikasi"
+                     name="cfg_ambang_klarifikasi"
+                     value="0.50"
+                     step="0.01"
+                     min="0"
+                     max="1">
+            
+
+            
+              <div class="help-text">Skor minimum untuk meminta klarifikasi atau memanggil AI (disarankan 0,50).</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_versi_kb">
+              <span>Versi Basis Pengetahuan</span>
+              <code class="key-chip">versi_kb</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_versi_kb"
+                     name="cfg_versi_kb"
+                     value="1"
+                     step="1"
+                     min="1"
+                     >
+            
+
+            
+              <div class="help-text">Naikkan setiap kali isi FAQ berubah.</div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="card settings-block" id="grup-ai">
+      <div class="card-head">
+        <div class="card-title"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="8" width="16" height="12" rx="2"/><line x1="12" y1="4" x2="12" y2="8"/><circle cx="12" cy="3" r="1"/><line x1="9" y1="13" x2="9" y2="15"/><line x1="15" y1="13" x2="15" y2="15"/><line x1="2" y1="13" x2="4" y2="13"/><line x1="20" y1="13" x2="22" y2="13"/></svg> Mesin AI (Gemini)</div>
+        <span class="badge badge-neutral">8 pengaturan</span>
+      </div>
+
+      
+        <p class="muted settings-desc">Model, kreativitas, kuota, dan perlindungan privasi pada lapisan AI.</p>
+      
+
+      <div class="settings-fields">
+        
+          <div class="form-group">
+            <label for="cfg_ai_aktif">
+              <span>Aktifkan Lapisan AI</span>
+              <code class="key-chip">ai_aktif</code>
+            </label>
+
+            
+              <select id="cfg_ai_aktif" name="cfg_ai_aktif">
+                
+                  <option value="1" selected>Aktif</option>
+                
+                  <option value="0" >Nonaktif</option>
+                
+              </select>
+            
+
+            
+              <div class="help-text">Jika nonaktif, sistem hanya memakai jawaban tercetak dan eskalasi.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ai_model_utama">
+              <span>Model AI Utama</span>
+              <code class="key-chip">ai_model_utama</code>
+            </label>
+
+            
+              <input type="text" id="cfg_ai_model_utama" name="cfg_ai_model_utama" value="gemini-3.5-flash-lite">
+            
+
+            
+              <div class="help-text">Model Gemini utama untuk jawaban bergaya manusiawi.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ai_model_cadangan">
+              <span>Model AI Cadangan</span>
+              <code class="key-chip">ai_model_cadangan</code>
+            </label>
+
+            
+              <input type="text" id="cfg_ai_model_cadangan" name="cfg_ai_model_cadangan" value="gemini-3.8-flash">
+            
+
+            
+              <div class="help-text">Dipakai otomatis bila model utama terkena batas kuota (429).</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ai_suhu">
+              <span>Suhu (Kreativitas) AI</span>
+              <code class="key-chip">ai_suhu</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_ai_suhu"
+                     name="cfg_ai_suhu"
+                     value="0.3"
+                     step="0.1"
+                     min="0"
+                     max="2">
+            
+
+            
+              <div class="help-text">Nilai rendah (0,3) membuat jawaban lebih patuh pada fakta.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ai_maks_token">
+              <span>Maksimum Token Jawaban</span>
+              <code class="key-chip">ai_maks_token</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_ai_maks_token"
+                     name="cfg_ai_maks_token"
+                     value="320"
+                     step="10"
+                     min="50"
+                     >
+            
+
+            
+              <div class="help-text">Batas panjang keluaran AI.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ai_kuota_harian_maks">
+              <span>Kuota Harian AI</span>
+              <code class="key-chip">ai_kuota_harian_maks</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_ai_kuota_harian_maks"
+                     name="cfg_ai_kuota_harian_maks"
+                     value="200"
+                     step="10"
+                     min="0"
+                     >
+            
+
+            
+              <div class="help-text">Jumlah maksimum panggilan AI per hari.</div>
+            
+          </div>
+        
+          <div class="form-group field-wide">
+            <label for="cfg_ai_gaya">
+              <span>Gaya Bahasa AI</span>
+              <code class="key-chip">ai_gaya</code>
+            </label>
+
+            
+              <textarea id="cfg_ai_gaya" name="cfg_ai_gaya" rows="3">ramah, singkat, jelas, kosakata sederhana untuk lansia</textarea>
+            
+
+            
+              <div class="help-text">Preferensi gaya jawaban, misalnya ramah dan sederhana untuk lansia.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_ai_kirim_nomor_wa">
+              <span>Kirim Nomor WhatsApp ke AI</span>
+              <code class="key-chip">ai_kirim_nomor_wa</code>
+            </label>
+
+            
+              <select id="cfg_ai_kirim_nomor_wa" name="cfg_ai_kirim_nomor_wa">
+                
+                  <option value="0" selected>Jangan kirim (disarankan)</option>
+                
+                  <option value="1" >Kirim</option>
+                
+              </select>
+            
+
+            
+              <div class="help-text">Biarkan &#34;Jangan kirim&#34; agar identitas pengunjung tidak pernah dikirim ke penyedia AI.</div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="card settings-block" id="grup-kanal">
+      <div class="card-head">
+        <div class="card-title"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Kanal &amp; Kecepatan Balasan</div>
+        <span class="badge badge-neutral">3 pengaturan</span>
+      </div>
+
+      
+        <p class="muted settings-desc">Kanal aktif serta jeda balasan agar percakapan terasa manusiawi.</p>
+      
+
+      <div class="settings-fields">
+        
+          <div class="form-group">
+            <label for="cfg_kanal_aktif">
+              <span>Kanal Aktif</span>
+              <code class="key-chip">kanal_aktif</code>
+            </label>
+
+            
+              <select id="cfg_kanal_aktif" name="cfg_kanal_aktif">
+                
+                  <option value="simulasi" selected>Simulasi (tanpa WhatsApp)</option>
+                
+                  <option value="baileys" >WhatsApp (Baileys)</option>
+                
+              </select>
+            
+
+            
+              <div class="help-text">Kanal yang dipakai saat aplikasi dijalankan.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_delay_min_ms">
+              <span>Jeda Minimum Balasan</span>
+              <code class="key-chip">delay_min_ms</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_delay_min_ms"
+                     name="cfg_delay_min_ms"
+                     value="1500"
+                     step="100"
+                     min="0"
+                     >
+            
+
+            
+              <div class="help-text">Dalam milidetik. Contoh: 1500 = 1,5 detik.</div>
+            
+          </div>
+        
+          <div class="form-group">
+            <label for="cfg_delay_max_ms">
+              <span>Jeda Maksimum Balasan</span>
+              <code class="key-chip">delay_max_ms</code>
+            </label>
+
+            
+              <input type="number"
+                     id="cfg_delay_max_ms"
+                     name="cfg_delay_max_ms"
+                     value="4000"
+                     step="100"
+                     min="0"
+                     >
+            
+
+            
+              <div class="help-text">Dalam milidetik. Contoh: 4000 = 4 detik.</div>
+            
+          </div>
+        
+      </div>
+    </section>
+  
+
+  <div class="settings-savebar">
+    <span class="muted" style="font-size: 0.84rem;">Perubahan berlaku setelah disimpan.</span>
+    <button type="submit" class="btn btn-primary"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"/></svg> Simpan Semua Pengaturan</button>
+  </div>
+</form>
+
+  
+          </div> <!-- .container -->
+        </main>
+        <footer class="site-foot">
+          Silapurwa v1.0 &mdash; Sistem Informasi Layanan Masyarakat &bull; Panel Administrasi
+        </footer>
+      </div> <!-- .main -->
+    </div> <!-- .app-shell -->
+  
+</body>
+</html>
+

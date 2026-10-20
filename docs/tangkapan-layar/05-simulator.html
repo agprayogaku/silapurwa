@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<!-- Tangkapan layar Silapurwa: /simulator (2026-10-20T10:48:34.405Z) -->
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Silapurwa Admin &mdash; Lapas Purwakarta</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1120;
+      --sidebar: #0f172a;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --surface-3: #263449;
+      --border: #1f2a3c;
+      --border-soft: #182234;
+      --text: #e6ebf2;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-soft: rgba(59, 130, 246, 0.14);
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --sidebar-w: 264px;
+      --ring: rgba(56, 189, 248, 0.35);
+    }
+
+    @media (max-width: 768px) {
+      html { font-size: 15px; }
+    }
+    @media (min-width: 769px) {
+      html { font-size: 17px; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .ikon { flex: 0 0 auto; }
+
+    /* ---------------- Layout ---------------- */
+    .app-shell { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 100;
+      transition: transform 0.25s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #1d4ed8);
+      color: #fff;
+      flex: 0 0 auto;
+    }
+    .brand-text { line-height: 1.2; }
+    .brand-title { font-weight: 700; font-size: 1.05rem; letter-spacing: 0.4px; color: #fff; }
+    .brand-sub { font-size: 0.78rem; color: var(--text-muted); }
+
+    .sidebar-nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+    .nav-label {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.9px;
+      color: var(--text-dim); padding: 0.5rem 0.9rem 0.4rem;
+    }
+    .sidebar-nav a {
+      position: relative;
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 0.2rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      transition: background 0.18s, color 0.18s;
+    }
+    .sidebar-nav a:hover { background: rgba(148, 163, 184, 0.1); color: var(--text); }
+    .sidebar-nav a.active {
+      background: var(--primary-soft);
+      color: #93c5fd;
+    }
+    .sidebar-nav a.active::before {
+      content: "";
+      position: absolute; left: 0; top: 20%; bottom: 20%;
+      width: 3px; border-radius: 0 3px 3px 0; background: var(--primary);
+    }
+
+    .sidebar-foot {
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.25rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .user-chip { display: flex; align-items: center; gap: 0.7rem; }
+    .user-avatar {
+      display: grid; place-items: center;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--surface-2); color: var(--accent); flex: 0 0 auto;
+    }
+    .user-name { font-weight: 600; font-size: 0.92rem; color: var(--text); }
+    .user-role { font-size: 0.75rem; color: var(--text-muted); text-transform: capitalize; }
+    .logout-link {
+      display: flex; align-items: center; gap: 0.55rem;
+      color: #fca5a5; text-decoration: none; font-weight: 500; font-size: 0.88rem;
+      padding: 0.5rem 0.6rem; border-radius: var(--radius-sm);
+      transition: background 0.18s;
+    }
+    .logout-link:hover { background: rgba(239, 68, 68, 0.12); }
+
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    @media (min-width: 769px) { .main { margin-left: var(--sidebar-w); } }
+
+    .topbar {
+      display: none;
+      align-items: center; justify-content: space-between;
+      gap: 0.75rem;
+      background: var(--sidebar);
+      border-bottom: 1px solid var(--border);
+      padding: 0.7rem 1rem;
+      position: sticky; top: 0; z-index: 90;
+    }
+    .icon-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+    }
+    .icon-btn:hover { background: var(--surface-3); }
+
+    .backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(2, 6, 23, 0.65); backdrop-filter: blur(2px); z-index: 95;
+    }
+    @media (max-width: 768px) {
+      .topbar { display: flex; }
+      .sidebar { transform: translateX(-100%); box-shadow: none; }
+      .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0, 0, 0, 0.6); }
+      .backdrop.open { display: block; }
+      .brand { padding: 1rem 1.1rem; }
+    }
+
+    .content { flex: 1; width: 100%; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 2rem 1.5rem 2.5rem; width: 100%; }
+    @media (max-width: 768px) { .container { padding: 1.1rem 1rem 2rem; } }
+
+    .site-foot {
+      text-align: center; font-size: 0.78rem; color: var(--text-dim);
+      padding: 1.5rem 1rem; border-top: 1px solid var(--border);
+    }
+
+    /* ---------------- Headings ---------------- */
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.2px; color: var(--text); }
+    h2 { font-size: 1.18rem; font-weight: 650; color: var(--text); margin-bottom: 0.25rem; }
+    h3 { font-size: 1.02rem; font-weight: 600; color: var(--text); }
+    .muted { color: var(--text-muted); }
+    .dim { color: var(--text-dim); }
+
+    .page-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end;
+      justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem;
+    }
+    .page-head .lead { color: var(--text-muted); font-size: 0.92rem; margin-top: 0.25rem; max-width: 70ch; }
+    .page-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+    /* ---------------- Cards ---------------- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      margin-bottom: 1.4rem;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .card-title { display: flex; align-items: center; gap: 0.55rem; font-weight: 650; font-size: 1.02rem; }
+    .card-title .ikon { color: var(--accent); }
+
+    /* ---------------- Grid & KPI ---------------- */
+    .grid { display: grid; gap: 1.1rem; margin-bottom: 1.4rem; }
+    .grid-kpi { grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-main { grid-template-columns: 2fr 1fr; align-items: start; }
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-main { grid-template-columns: 1fr; }
+    }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.25rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .kpi-top { display: flex; align-items: center; justify-content: space-between; }
+    .kpi-ico {
+      display: grid; place-items: center; width: 38px; height: 38px;
+      border-radius: 10px; background: var(--primary-soft); color: var(--accent);
+    }
+    .kpi-num { font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .kpi-label { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ---------------- Buttons ---------------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.55rem 1rem; font-size: 0.92rem; font-weight: 600;
+      border-radius: var(--radius-sm); cursor: pointer; text-decoration: none;
+      border: 1px solid transparent; transition: background 0.18s, border-color 0.18s, color 0.18s;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); }
+    .btn-danger { background: rgba(239, 68, 68, 0.14); color: #fca5a5; border-color: rgba(239, 68, 68, 0.35); }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.24); }
+    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.82rem; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-block { width: 100%; }
+
+    /* ---------------- Alerts ---------------- */
+    .alert {
+      display: flex; gap: 0.65rem; align-items: flex-start;
+      padding: 0.85rem 1rem; border-radius: var(--radius-sm);
+      margin-bottom: 1.2rem; font-size: 0.92rem; border: 1px solid transparent;
+    }
+    .alert-success { background: rgba(34, 197, 94, 0.1); color: #86efac; border-color: rgba(34, 197, 94, 0.3); }
+    .alert-danger { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .alert-info { background: rgba(56, 189, 248, 0.1); color: #7dd3fc; border-color: rgba(56, 189, 248, 0.3); }
+
+    /* ---------------- Tables ---------------- */
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { padding: 0.7rem 0.8rem; text-align: left; vertical-align: top; }
+    th {
+      background: var(--surface-2); color: var(--text-muted);
+      font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border-soft); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(148, 163, 184, 0.05); }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85em; background: var(--surface-2); padding: 0.1rem 0.4rem;
+      border-radius: 5px; color: #93c5fd;
+    }
+
+    /* ---------------- Badges ---------------- */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.18rem 0.6rem; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px; white-space: nowrap;
+    }
+    .badge-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .badge-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .badge-info { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; }
+    .badge-neutral { background: var(--surface-2); color: var(--text-muted); }
+
+    /* ---------------- Forms ---------------- */
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.4rem; color: var(--text); }
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea, select {
+      width: 100%; padding: 0.6rem 0.8rem;
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 0.95rem; font-family: inherit; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-dim); }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring);
+    }
+    textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+    select { appearance: none; background-image: none; }
+    .help-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; }
+
+    .form-actions {
+      border-top: 1px solid var(--border); padding-top: 1.1rem; margin-top: 0.5rem;
+      display: flex; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap;
+    }
+
+    /* ---------------- Settings ---------------- */
+    .settings-toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.4rem; }
+    .settings-toc a {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.8rem; padding: 0.35rem 0.75rem; border-radius: 999px;
+      background: var(--surface-2); color: var(--text-muted);
+      text-decoration: none; border: 1px solid var(--border);
+      transition: color 0.18s, border-color 0.18s;
+    }
+    .settings-toc a:hover { color: var(--text); border-color: var(--accent); }
+    .settings-block { scroll-margin-top: 84px; }
+    .settings-block .card-head { margin-bottom: 0.3rem; }
+    .settings-desc { font-size: 0.85rem; margin-bottom: 1.1rem; }
+    .settings-fields {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.15rem 1.25rem;
+    }
+    .settings-fields .form-group { margin-bottom: 0; }
+    .settings-fields .field-wide { grid-column: 1 / -1; }
+    .settings-fields label {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.35rem 0.6rem;
+    }
+    .settings-fields label span { min-width: 0; }
+    .key-chip {
+      font-weight: 400; font-size: 0.66rem; opacity: 0.75; white-space: nowrap;
+    }
+    .settings-savebar {
+      position: sticky; bottom: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      margin: 0 0 2rem; padding: 0.8rem 1rem;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: rgba(17, 24, 39, 0.92); backdrop-filter: blur(8px);
+    }
+    @media (max-width: 640px) {
+      .settings-savebar { flex-direction: column; align-items: stretch; }
+      .settings-savebar .btn { width: 100%; }
+    }
+
+    /* ---------------- Empty state ---------------- */
+    .empty {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      padding: 2rem 1rem; color: var(--text-muted); text-align: center;
+    }
+    .empty .ikon { color: var(--text-dim); }
+
+    /* ---------------- Login ---------------- */
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; width: 100%; }
+    .auth-card {
+      width: 100%; max-width: 420px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 16px; padding: 2.2rem;
+    }
+    .auth-brand { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin-bottom: 1.75rem; text-align: center; }
+    .auth-brand .brand-mark { width: 52px; height: 52px; border-radius: 14px; }
+    .auth-brand h1 { font-size: 1.35rem; letter-spacing: 0.5px; }
+    .auth-note { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 1.4rem; }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 1.5rem; }
+      .page-head { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  
+  
+    <div class="app-shell">
+      <div class="backdrop" id="backdrop" onclick="toggleSidebar(false)"></div>
+
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <span class="brand-mark"><svg class="ikon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <span class="brand-text">
+            <span class="brand-title">SILAPURWA</span>
+            <span class="brand-sub">Lapas Purwakarta</span>
+          </span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Navigasi utama">
+          <div class="nav-label">Menu</div>
+          <a href="/" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg> Dashboard</a>
+          <a href="/faq" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg> Basis FAQ</a>
+          <a href="/eskalasi" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> Tiket Eskalasi</a>
+          <a href="/simulator" class="active"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg> Simulator Chat</a>
+          <a href="/whatsapp" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> WhatsApp</a>
+          <a href="/pengaturan" class=""><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Pengaturan</a>
+        </nav>
+
+        <div class="sidebar-foot">
+          <div class="user-chip">
+            <span class="user-avatar"><svg class="ikon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <span>
+              <span class="user-name">Administrator</span><br>
+              <span class="user-role">admin</span>
+            </span>
+          </div>
+          <a href="/auth/keluar" class="logout-link"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Keluar dari Sistem</a>
+        </div>
+      </aside>
+
+      <div class="main">
+        <div class="topbar">
+          <button class="icon-btn" type="button" onclick="toggleSidebar(true)" aria-label="Buka menu">
+            <svg class="ikon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg> Menu
+          </button>
+          <span class="brand-title" style="font-size: 0.98rem;">SILAPURWA</span>
+        </div>
+        <main class="content">
+          <div class="container">
+  
+
+  <script>
+    function toggleSidebar(buka) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+      if (!sidebar) return;
+      const akanBuka = (typeof buka === 'boolean')
+        ? buka
+        : !sidebar.classList.contains('open');
+      sidebar.classList.toggle('open', akanBuka);
+      if (backdrop) backdrop.classList.toggle('open', akanBuka);
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') toggleSidebar(false);
+    });
+  </script>
+
+
+<div class="page-head">
+  <div>
+    <h1>Simulator Percakapan</h1>
+    <p class="lead">Uji respon chatbot dan verifikasi akurasi pencocokan secara langsung di peramban.</p>
+  </div>
+</div>
+
+<div class="card" style="max-width: 780px; margin: 0 auto;">
+  <div id="chat-box" style="height: 400px; overflow-y: auto; padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 1rem;">
+    <div style="margin-bottom: 0.85rem; display: flex; flex-direction: column; align-items: flex-start;">
+      <div style="background: var(--surface-2); border: 1px solid var(--border); padding: 0.7rem 0.9rem; border-radius: 12px 12px 12px 2px; max-width: 82%; font-size: 0.92rem;">
+        Selamat datang di Simulator Silapurwa. Ketik pertanyaan pengunjung di bawah untuk menguji respon bot secara lokal.
+      </div>
+      <div class="dim" style="font-size: 0.72rem; margin-top: 0.25rem;">Sistem</div>
+    </div>
+  </div>
+
+  <form id="form-chat" style="display: flex; gap: 0.6rem;">
+    <input type="text" id="input-teks" placeholder="Contoh: Jam berapa layanan dibuka?..." autocomplete="off" required style="flex: 1;">
+    <button type="submit" id="btn-kirim" class="btn btn-primary"><svg class="ikon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> <span id="btn-label">Kirim</span></button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('form-chat')
+  const input = document.getElementById('input-teks')
+  const box = document.getElementById('chat-box')
+  const btn = document.getElementById('btn-kirim')
+  const btnLabel = document.getElementById('btn-label')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const teks = input.value.trim()
+    if (!teks) return
+
+    tambahBubble('Pengunjung', teks, 'user')
+    input.value = ''
+    btn.disabled = true
+    btnLabel.innerText = 'Mengetik...'
+
+    try {
+      const res = await fetch('/simulator/kirim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ teks })
+      })
+      const data = await res.json()
+      const meta = `[Jenis: ${data.jenis} | Skor: ${data.skor}${data.kode ? ' | Kode: ' + data.kode : ''}]`
+      tambahBubble('Silapurwa', data.balasan, 'bot', meta)
+    } catch (err) {
+      tambahBubble('Sistem', 'Terjadi kesalahan komunikasi server: ' + err.message, 'error')
+    } finally {
+      btn.disabled = false
+      btnLabel.innerText = 'Kirim'
+      input.focus()
+    }
+  })
+
+  function tambahBubble(pengirim, teks, peran, meta = '') {
+    const baris = document.createElement('div')
+    baris.style.marginBottom = '0.85rem'
+    baris.style.display = 'flex'
+    baris.style.flexDirection = 'column'
+
+    const bubble = document.createElement('div')
+    bubble.style.padding = '0.7rem 0.9rem'
+    bubble.style.fontSize = '0.92rem'
+    bubble.style.lineHeight = '1.5'
+    bubble.style.whiteSpace = 'pre-wrap'
+
+    if (peran === 'user') {
+      baris.style.alignItems = 'flex-end'
+      bubble.style.background = 'var(--primary)'
+      bubble.style.color = '#fff'
+      bubble.style.borderRadius = '12px 12px 2px 12px'
+      bubble.style.maxWidth = '82%'
+    } else if (peran === 'bot') {
+      baris.style.alignItems = 'flex-start'
+      bubble.style.background = 'var(--surface-2)'
+      bubble.style.border = '1px solid var(--border)'
+      bubble.style.borderRadius = '12px 12px 12px 2px'
+      bubble.style.maxWidth = '88%'
+    } else {
+      baris.style.alignItems = 'center'
+      bubble.style.background = 'rgba(239,68,68,0.12)'
+      bubble.style.color = '#fca5a5'
+      bubble.style.border = '1px solid rgba(239,68,68,0.3)'
+      bubble.style.borderRadius = '8px'
+    }
+
+    bubble.innerText = teks
+    baris.appendChild(bubble)
+
+    if (meta) {
+      const labelMeta = document.createElement('div')
+      labelMeta.style.fontSize = '0.72rem'
+      labelMeta.style.color = 'var(--text-muted)'
+      labelMeta.style.marginTop = '0.25rem'
+      labelMeta.innerText = `${pengirim} ${meta}`
+      baris.appendChild(labelMeta)
+    }
+
+    box.appendChild(baris)
+    box.scrollTop = box.scrollHeight
+  }
+</script>
+
+  
+          </div> <!-- .container -->
+        </main>
+        <footer class="site-foot">
+          Silapurwa v1.0 &mdash; Sistem Informasi Layanan Masyarakat &bull; Panel Administrasi
+        </footer>
+      </div> <!-- .main -->
+    </div> <!-- .app-shell -->
+  
+</body>
+</html>
+

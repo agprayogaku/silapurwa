@@ -1,0 +1,8 @@
+import pino from 'pino'
+import { LOG_LEVEL } from './env.js'
+
+export const logger = pino({
+  level: LOG_LEVEL,
+  base: { app: 'silapurwa' },
+  timestamp: pino.stdTimeFunctions.isoTime
+})

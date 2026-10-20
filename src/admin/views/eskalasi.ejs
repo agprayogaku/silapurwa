@@ -1,0 +1,57 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <h1>Tiket Eskalasi Layanan</h1>
+    <p class="lead">Daftar pertanyaan pengunjung yang memerlukan tindak lanjut petugas piket.</p>
+  </div>
+</div>
+
+<% if (pesan) { %>
+  <div class="alert alert-success"><%- ikon('centang') %> <span><%= pesan %></span></div>
+<% } %>
+
+<div class="card">
+  <% if (daftar.length === 0) { %>
+    <div class="empty"><%- ikon('eskalasi', { ukuran: 26 }) %> <span>Tidak ada tiket eskalasi aktif saat ini.</span></div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Waktu</th><th>Pengunjung</th><th>Topik</th><th>Alasan</th><th>Status</th><th>Penanganan</th></tr>
+        </thead>
+        <tbody>
+          <% for (const t of daftar) { %>
+            <tr>
+              <td><strong>#<%= t.id %></strong></td>
+              <td class="dim" style="font-size: 0.8rem; white-space: nowrap;"><%= t.dibuat %></td>
+              <td><code><%= t.wa_hash %></code></td>
+              <td><strong><%= t.topik %></strong></td>
+              <td class="muted" style="font-size: 0.82rem;"><%= t.alasan %></td>
+              <td>
+                <% if (t.status === 'baru') { %><span class="badge badge-danger">BARU</span>
+                <% } else if (t.status === 'diproses') { %><span class="badge badge-warning">DIPROSES</span>
+                <% } else if (t.status === 'selesai') { %><span class="badge badge-success">SELESAI</span>
+                <% } else { %><span class="badge badge-neutral">BATAL</span><% } %>
+              </td>
+              <td>
+                <form method="POST" action="/eskalasi/update/<%= t.id %>" style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+                  <select name="status" style="width: auto; padding: 0.35rem 0.5rem; font-size: 0.82rem;">
+                    <option value="baru" <%= t.status === 'baru' ? 'selected' : '' %>>Baru</option>
+                    <option value="diproses" <%= t.status === 'diproses' ? 'selected' : '' %>>Diproses</option>
+                    <option value="selesai" <%= t.status === 'selesai' ? 'selected' : '' %>>Selesai</option>
+                    <option value="batal" <%= t.status === 'batal' ? 'selected' : '' %>>Batal</option>
+                  </select>
+                  <input type="text" name="catatan" value="<%= t.catatan || '' %>" placeholder="Catatan petugas..." style="width: 160px; padding: 0.35rem 0.5rem; font-size: 0.82rem;">
+                  <button type="submit" class="btn btn-secondary btn-sm"><%- ikon('centang', { ukuran: 15 }) %> Simpan</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('footer') %>

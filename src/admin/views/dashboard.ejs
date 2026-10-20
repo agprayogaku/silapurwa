@@ -1,0 +1,122 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <h1>Ringkasan Layanan</h1>
+    <p class="lead">Statistik dan aktivitas interaksi chatbot publik secara aktual.</p>
+  </div>
+</div>
+
+<div class="grid grid-kpi">
+  <div class="kpi">
+    <div class="kpi-top"><span class="kpi-label">Pengunjung Unik</span><span class="kpi-ico"><%- ikon('pengguna') %></span></div>
+    <div class="kpi-num"><%= stats.totalPercakapan %></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-top"><span class="kpi-label">Pesan Masuk</span><span class="kpi-ico"><%- ikon('simulator') %></span></div>
+    <div class="kpi-num"><%= stats.totalPesanMasuk %></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-top"><span class="kpi-label">Dijawab Otomatis</span><span class="kpi-ico" style="background: rgba(34,197,94,0.14); color:#4ade80;"><%- ikon('centang') %></span></div>
+    <div class="kpi-num" style="color:#4ade80;"><%= stats.terjawabFaq %></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-top"><span class="kpi-label">Tiket Eskalasi</span><span class="kpi-ico" style="background: rgba(245,158,11,0.14); color:#fbbf24;"><%- ikon('eskalasi') %></span></div>
+    <div class="kpi-num" style="color:#fbbf24;"><%= stats.dieskalasi %></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-top"><span class="kpi-label">Ditolak Pagar Privasi</span><span class="kpi-ico" style="background: rgba(239,68,68,0.14); color:#f87171;"><%- ikon('perisai') %></span></div>
+    <div class="kpi-num" style="color:#f87171;"><%= stats.ditolak %></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-top"><span class="kpi-label">FAQ Terbit / Total</span><span class="kpi-ico"><%- ikon('faq') %></span></div>
+    <div class="kpi-num"><%= stats.totalFaqPublish %> <span class="dim" style="font-size: 1rem; font-weight: 500;">/ <%= stats.totalFaqPublish + stats.totalFaqDraft %></span></div>
+  </div>
+</div>
+
+<div class="card" style="padding: 1.1rem 1.4rem;">
+  <div class="card-head" style="margin-bottom: 0;">
+    <div class="card-title"><%- ikon('robot') %> Status Mesin AI Gemini</div>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <span class="badge badge-info">gemini-3.5-flash-lite</span>
+      <span class="badge badge-success">Anti-Halusinasi Aktif</span>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin: 1rem 0 0;">
+    <div><div class="kpi-num" style="font-size: 1.35rem;"><%= aiStats.panggilanHariIni %></div><div class="kpi-label">Panggilan Hari Ini</div></div>
+    <div><div class="kpi-num" style="font-size: 1.35rem;"><%= aiStats.tokenHariIni %></div><div class="kpi-label">Token Terpakai</div></div>
+    <div><div class="kpi-num" style="font-size: 1.35rem;"><%= aiStats.rateLimit429 %></div><div class="kpi-label">Rate Limit 429</div></div>
+  </div>
+</div>
+
+<div class="grid grid-main">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><%- ikon('aktivitas') %> Pesan Terbaru</div>
+    </div>
+    <% if (pesanTerbaru.length === 0) { %>
+      <div class="empty"><%- ikon('simulator', { ukuran: 26 }) %> <span>Belum ada riwayat pesan.</span></div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Waktu</th><th>Arah</th><th>Teks</th><th>Status</th><th>Skor</th></tr>
+          </thead>
+          <tbody>
+            <% for (const p of pesanTerbaru) { %>
+              <tr>
+                <td class="dim" style="font-size: 0.78rem; white-space: nowrap;"><%= p.ts %></td>
+                <td>
+                  <% if (p.arah === 'masuk') { %>
+                    <span class="badge badge-info">MASUK</span>
+                  <% } else { %>
+                    <span class="badge badge-success">KELUAR</span>
+                  <% } %>
+                </td>
+                <td><%= (p.isi_teks || '').slice(0, 50) %><%= (p.isi_teks && p.isi_teks.length > 50) ? '...' : '' %></td>
+                <td>
+                  <% if (p.jenis_balasan === 'faq') { %>
+                    <span class="badge badge-success">FAQ <%= p.kode_faq || '' %></span>
+                    <% if (p.sumber_jawaban === 'ai') { %><span class="badge badge-info">AI</span>
+                    <% } else if (p.sumber_jawaban === 'cache') { %><span class="badge badge-warning">CACHE</span>
+                    <% } else if (p.sumber_jawaban === 'tercetak') { %><span class="badge badge-neutral">TERCETAK</span><% } %>
+                  <% } else if (p.jenis_balasan === 'tolak') { %>
+                    <span class="badge badge-danger">DITOLAK</span>
+                  <% } else if (p.jenis_balasan === 'eskalasi') { %>
+                    <span class="badge badge-warning">ESKALASI</span>
+                  <% } else if (p.jenis_balasan === 'sapaan') { %>
+                    <span class="badge badge-info">SAPAAN</span>
+                  <% } else { %><span class="dim">-</span><% } %>
+                </td>
+                <td><%= p.skor !== null ? p.skor : '-' %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title"><%- ikon('cari') %> Pertanyaan Tak Terjawab</div>
+    </div>
+    <p class="muted" style="font-size: 0.82rem; margin-bottom: 0.75rem;">Pertanyaan yang sering diajukan namun belum ada di basis data FAQ.</p>
+    <% if (takTerjawabTop.length === 0) { %>
+      <div class="empty"><%- ikon('centang', { ukuran: 26 }) %> <span>Semua pertanyaan terlayani.</span></div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pertanyaan</th><th>Frekuensi</th></tr></thead>
+          <tbody>
+            <% for (const q of takTerjawabTop) { %>
+              <tr><td><%= q.teks_normal %></td><td><strong><%= q.jumlah %>x</strong></td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('footer') %>

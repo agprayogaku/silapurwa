@@ -1,0 +1,85 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <a href="/faq" class="btn btn-secondary btn-sm" style="margin-bottom: 0.75rem;"><%- ikon('kembali', { ukuran: 15 }) %> Kembali</a>
+    <h1>Kelola FAQ &mdash; <%= faq.kode %></h1>
+    <p class="lead">Ubah isi jawaban resmi, varian pertanyaan, dan status verifikasi.</p>
+  </div>
+</div>
+
+<div class="card" style="max-width: 940px;">
+  <form method="POST" action="/faq/edit/<%= faq.id %>">
+    <div class="grid grid-main" style="margin-bottom: 0;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="pertanyaan_contoh">Pertanyaan Acuan / Contoh</label>
+        <input type="text" id="pertanyaan_contoh" name="pertanyaan_contoh" value="<%= faq.pertanyaan_contoh %>" required>
+        <div class="help-text">Pertanyaan standar yang menjadi acuan topik.</div>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="kategori_id">Kategori Layanan</label>
+        <select id="kategori_id" name="kategori_id" required>
+          <% for (const k of kategoriList) { %>
+            <option value="<%= k.id %>" <%= k.id === faq.kategori_id ? 'selected' : '' %>><%= k.nama %></option>
+          <% } %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 1.2rem;">
+      <label for="jawaban">Jawaban Resmi Lengkap (Fakta Sumber)</label>
+      <textarea id="jawaban" name="jawaban" rows="4" required><%= faq.jawaban %></textarea>
+      <div class="help-text">Teks resmi faktual dari petugas penanggung jawab / dasar aturan.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="jawaban_bot_tercetak">Jawaban Bot Tercetak (Ringkas, Ramah)</label>
+      <textarea id="jawaban_bot_tercetak" name="jawaban_bot_tercetak" rows="3" placeholder="Opsional: teks ramah, singkat, jelas..."><%= faq.jawaban_bot_tercetak || '' %></textarea>
+      <div class="help-text">Teks ini langsung dikirim pada Jalur Cepat tanpa memanggil AI. Maksimal 3 kalimat &amp; 40 kata.</div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom: 0;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="varianText">Varian Pertanyaan Pengunjung (1 per baris)</label>
+        <textarea id="varianText" name="varianText" rows="4" placeholder="jam besuk&#10;jadwal kunjungan&#10;besuk buka jam berapa"><%= varianText %></textarea>
+        <div class="help-text">Frasa alternatif yang sering diketikkan masyarakat.</div>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="keywordText">Kata Kunci &amp; Bobot (format: kata, bobot)</label>
+        <textarea id="keywordText" name="keywordText" rows="4" placeholder="besuk, 1.5&#10;jam, 1.0&#10;kunjungan, 1.2"><%= keywordText %></textarea>
+        <div class="help-text">Bobot 1.0 sampai 2.0 untuk kata penting penentu topik.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 1.2rem 0 1rem;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="status">Status Verifikasi</label>
+        <select id="status" name="status">
+          <option value="draft" <%= faq.status === 'draft' ? 'selected' : '' %>>Draft</option>
+          <option value="review" <%= faq.status === 'review' ? 'selected' : '' %>>Review</option>
+          <option value="publish" <%= faq.status === 'publish' ? 'selected' : '' %>>Terbit (Publish)</option>
+          <option value="arsip" <%= faq.status === 'arsip' ? 'selected' : '' %>>Arsip</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="sumber">Dasar Aturan / Sumber</label>
+        <input type="text" id="sumber" name="sumber" value="<%= faq.sumber || '' %>" placeholder="Contoh: SK No 12/2026">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="berlaku_sampai">Berlaku Sampai (YYYY-MM-DD)</label>
+        <input type="text" id="berlaku_sampai" name="berlaku_sampai" value="<%= faq.berlaku_sampai || '' %>" placeholder="Kosongkan jika permanen">
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="prioritas">Prioritas (0 - 10)</label>
+        <input type="text" id="prioritas" name="prioritas" value="<%= faq.prioritas %>">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="/faq" class="btn btn-secondary">Batal</a>
+      <button type="submit" class="btn btn-primary"><%- ikon('centang') %> Simpan &amp; Perbarui Indeks</button>
+    </div>
+  </form>
+</div>
+
+<%- include('footer') %>

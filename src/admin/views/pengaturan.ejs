@@ -1,0 +1,75 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <h1>Pengaturan Sistem</h1>
+    <p class="lead">Konfigurasi dikelompokkan per bagian agar mudah ditinjau. Perubahan berlaku setelah tombol simpan ditekan.</p>
+  </div>
+</div>
+
+<% if (pesan) { %>
+  <div class="alert alert-success"><%- ikon('centang') %> <span><%= pesan %></span></div>
+<% } %>
+
+<nav class="settings-toc" aria-label="Lompat ke bagian pengaturan">
+  <% for (const grup of grupPengaturan) { %>
+    <a href="#grup-<%= grup.id %>"><%- ikon(grup.ikon, { ukuran: 14 }) %> <%= grup.judul %></a>
+  <% } %>
+</nav>
+
+<form method="POST" action="/pengaturan">
+  <% for (const grup of grupPengaturan) { %>
+    <section class="card settings-block" id="grup-<%= grup.id %>">
+      <div class="card-head">
+        <div class="card-title"><%- ikon(grup.ikon) %> <%= grup.judul %></div>
+        <span class="badge badge-neutral"><%= grup.items.length %> pengaturan</span>
+      </div>
+
+      <% if (grup.deskripsi) { %>
+        <p class="muted settings-desc"><%= grup.deskripsi %></p>
+      <% } %>
+
+      <div class="settings-fields">
+        <% for (const item of grup.items) { %>
+          <div class="form-group<%= item.lebar === 'wide' ? ' field-wide' : '' %>">
+            <label for="cfg_<%= item.kunci %>">
+              <span><%= item.label %></span>
+              <code class="key-chip"><%= item.kunci %></code>
+            </label>
+
+            <% if (item.opsi) { %>
+              <select id="cfg_<%= item.kunci %>" name="cfg_<%= item.kunci %>">
+                <% for (const o of item.opsi) { %>
+                  <option value="<%= o.nilai %>" <%= String(item.nilai) === String(o.nilai) ? 'selected' : '' %>><%= o.label %></option>
+                <% } %>
+              </select>
+            <% } else if (item.tipeTampil === 'number') { %>
+              <input type="number"
+                     id="cfg_<%= item.kunci %>"
+                     name="cfg_<%= item.kunci %>"
+                     value="<%= item.nilai %>"
+                     <% if (item.langkah) { %>step="<%= item.langkah %>"<% } else { %>step="any"<% } %>
+                     <% if (item.min !== undefined && item.min !== null) { %>min="<%= item.min %>"<% } %>
+                     <% if (item.max !== undefined && item.max !== null) { %>max="<%= item.max %>"<% } %>>
+            <% } else if (item.kontrol === 'textarea' || (item.nilai && item.nilai.length > 120)) { %>
+              <textarea id="cfg_<%= item.kunci %>" name="cfg_<%= item.kunci %>" rows="3"><%= item.nilai %></textarea>
+            <% } else { %>
+              <input type="text" id="cfg_<%= item.kunci %>" name="cfg_<%= item.kunci %>" value="<%= item.nilai %>">
+            <% } %>
+
+            <% if (item.petunjuk) { %>
+              <div class="help-text"><%= item.petunjuk %></div>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </section>
+  <% } %>
+
+  <div class="settings-savebar">
+    <span class="muted" style="font-size: 0.84rem;">Perubahan berlaku setelah disimpan.</span>
+    <button type="submit" class="btn btn-primary"><%- ikon('centang') %> Simpan Semua Pengaturan</button>
+  </div>
+</form>
+
+<%- include('footer') %>

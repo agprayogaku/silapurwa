@@ -1,0 +1,38 @@
+{
+  "name": "silapurwa",
+  "version": "1.0.0",
+  "description": "Sistem Informasi Layanan Lapas Purwakarta - Chatbot WhatsApp Layanan Publik",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "init-db": "node src/db/init.js",
+    "test:retrieval": "node src/mesin/uji-retrieval.js",
+    "test:ai": "node src/mesin/uji-ai.js",
+    "test:blackbox": "node src/mesin/uji-blackbox.js",
+    "test": "node src/mesin/uji-retrieval.js && node src/mesin/uji-ai.js && node src/mesin/uji-blackbox.js",
+    "status-data": "node scripts/status-data.js",
+    "reset-data": "node scripts/reset-data.js",
+    "data:lapas": "node scripts/muat-data-lapas.js",
+    "export:tangkapan": "node scripts/export-tangkapan-layar.js",
+    "doc:blackbox": "node scripts/generate-blackbox-doc.js",
+    "wa:login": "node scripts/wa-login.js",
+    "simulasi": "node src/saluran/simulasi.js"
+  },
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "dependencies": {
+    "@google/genai": "2.30.0",
+    "@whiskeysockets/baileys": "6.7.24",
+    "bcryptjs": "3.0.3",
+    "dotenv": "18.0.8",
+    "ejs": "7.0.1",
+    "express": "5.3.0",
+    "express-session": "1.19.0",
+    "node-cron": "4.6.0",
+    "pino": "10.4.0",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "0.12.0"
+  }
+}

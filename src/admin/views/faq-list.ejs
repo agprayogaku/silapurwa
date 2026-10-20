@@ -1,0 +1,56 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <h1>Basis Pengetahuan FAQ</h1>
+    <p class="lead">Hanya FAQ berstatus <strong>Terbit</strong> yang dipakai bot untuk menjawab masyarakat.</p>
+  </div>
+  <div class="page-actions">
+    <form method="POST" action="/faq/reindex-semua" onsubmit="return confirm('Bangun ulang seluruh indeks pencarian?')">
+      <button type="submit" class="btn btn-secondary"><%- ikon('aktivitas') %> Perbarui Indeks</button>
+    </form>
+  </div>
+</div>
+
+<% if (pesan) { %>
+  <div class="alert alert-success"><%- ikon('centang') %> <span><%= pesan %></span></div>
+<% } %>
+
+<div class="card">
+  <% if (faqs.length === 0) { %>
+    <div class="empty"><%- ikon('faq', { ukuran: 26 }) %> <span>Belum ada data FAQ. Basis data masih kosong.</span></div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kode</th><th>Kategori</th><th>Pertanyaan Contoh</th>
+            <th>Jawaban (Ringkasan)</th><th>Status</th><th>Kadaluarsa</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const f of faqs) { %>
+            <tr>
+              <td><code><%= f.kode %></code></td>
+              <td><%= f.nama_kategori %></td>
+              <td><%= f.pertanyaan_contoh %></td>
+              <td class="muted" style="max-width: 320px; font-size: 0.85rem;">
+                <%= f.jawaban.slice(0, 75) %><%= f.jawaban.length > 75 ? '...' : '' %>
+              </td>
+              <td>
+                <% if (f.status === 'publish') { %><span class="badge badge-success">TERBIT</span>
+                <% } else if (f.status === 'review') { %><span class="badge badge-warning">REVIEW</span>
+                <% } else if (f.status === 'draft') { %><span class="badge badge-danger">DRAFT</span>
+                <% } else { %><span class="badge badge-neutral">ARSIP</span><% } %>
+              </td>
+              <td class="muted" style="font-size: 0.82rem;"><%= f.berlaku_sampai || 'Selamanya' %></td>
+              <td><a href="/faq/edit/<%= f.id %>" class="btn btn-secondary btn-sm"><%- ikon('tetapan', { ukuran: 15 }) %> Kelola</a></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('footer') %>

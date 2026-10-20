@@ -1,0 +1,35 @@
+<%- include('header') %>
+
+<div class="auth-card">
+  <div class="auth-brand">
+    <span class="brand-mark"><%- ikon('perisai', { ukuran: 26 }) %></span>
+    <div>
+      <h1>SILAPURWA</h1>
+      <div class="muted" style="font-size: 0.85rem;">Panel Administrasi Layanan</div>
+    </div>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-danger"><%- ikon('peringatan') %> <span><%= error %></span></div>
+  <% } %>
+
+  <form method="POST" action="/auth/masuk">
+    <div class="form-group">
+      <label for="username">Nama Pengguna</label>
+      <input type="text" id="username" name="username" required autofocus autocomplete="username" placeholder="admin">
+    </div>
+    <div class="form-group">
+      <label for="password">Kata Sandi</label>
+      <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Masukkan kata sandi">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 0.5rem; padding: 0.7rem;">
+      <%- ikon('kunci') %> Masuk ke Panel
+    </button>
+  </form>
+
+  <p class="auth-note">
+    Silapurwa v1.0 &bull; Akses terbatas untuk operator yang berwenang.
+  </p>
+</div>
+
+<%- include('footer') %>

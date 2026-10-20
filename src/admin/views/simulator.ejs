@@ -1,0 +1,110 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <h1>Simulator Percakapan</h1>
+    <p class="lead">Uji respon chatbot dan verifikasi akurasi pencocokan secara langsung di peramban.</p>
+  </div>
+</div>
+
+<div class="card" style="max-width: 780px; margin: 0 auto;">
+  <div id="chat-box" style="height: 400px; overflow-y: auto; padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 1rem;">
+    <div style="margin-bottom: 0.85rem; display: flex; flex-direction: column; align-items: flex-start;">
+      <div style="background: var(--surface-2); border: 1px solid var(--border); padding: 0.7rem 0.9rem; border-radius: 12px 12px 12px 2px; max-width: 82%; font-size: 0.92rem;">
+        Selamat datang di Simulator Silapurwa. Ketik pertanyaan pengunjung di bawah untuk menguji respon bot secara lokal.
+      </div>
+      <div class="dim" style="font-size: 0.72rem; margin-top: 0.25rem;">Sistem</div>
+    </div>
+  </div>
+
+  <form id="form-chat" style="display: flex; gap: 0.6rem;">
+    <input type="text" id="input-teks" placeholder="Contoh: Jam berapa layanan dibuka?..." autocomplete="off" required style="flex: 1;">
+    <button type="submit" id="btn-kirim" class="btn btn-primary"><%- ikon('kirim') %> <span id="btn-label">Kirim</span></button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('form-chat')
+  const input = document.getElementById('input-teks')
+  const box = document.getElementById('chat-box')
+  const btn = document.getElementById('btn-kirim')
+  const btnLabel = document.getElementById('btn-label')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const teks = input.value.trim()
+    if (!teks) return
+
+    tambahBubble('Pengunjung', teks, 'user')
+    input.value = ''
+    btn.disabled = true
+    btnLabel.innerText = 'Mengetik...'
+
+    try {
+      const res = await fetch('/simulator/kirim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ teks })
+      })
+      const data = await res.json()
+      const meta = `[Jenis: ${data.jenis} | Skor: ${data.skor}${data.kode ? ' | Kode: ' + data.kode : ''}]`
+      tambahBubble('Silapurwa', data.balasan, 'bot', meta)
+    } catch (err) {
+      tambahBubble('Sistem', 'Terjadi kesalahan komunikasi server: ' + err.message, 'error')
+    } finally {
+      btn.disabled = false
+      btnLabel.innerText = 'Kirim'
+      input.focus()
+    }
+  })
+
+  function tambahBubble(pengirim, teks, peran, meta = '') {
+    const baris = document.createElement('div')
+    baris.style.marginBottom = '0.85rem'
+    baris.style.display = 'flex'
+    baris.style.flexDirection = 'column'
+
+    const bubble = document.createElement('div')
+    bubble.style.padding = '0.7rem 0.9rem'
+    bubble.style.fontSize = '0.92rem'
+    bubble.style.lineHeight = '1.5'
+    bubble.style.whiteSpace = 'pre-wrap'
+
+    if (peran === 'user') {
+      baris.style.alignItems = 'flex-end'
+      bubble.style.background = 'var(--primary)'
+      bubble.style.color = '#fff'
+      bubble.style.borderRadius = '12px 12px 2px 12px'
+      bubble.style.maxWidth = '82%'
+    } else if (peran === 'bot') {
+      baris.style.alignItems = 'flex-start'
+      bubble.style.background = 'var(--surface-2)'
+      bubble.style.border = '1px solid var(--border)'
+      bubble.style.borderRadius = '12px 12px 12px 2px'
+      bubble.style.maxWidth = '88%'
+    } else {
+      baris.style.alignItems = 'center'
+      bubble.style.background = 'rgba(239,68,68,0.12)'
+      bubble.style.color = '#fca5a5'
+      bubble.style.border = '1px solid rgba(239,68,68,0.3)'
+      bubble.style.borderRadius = '8px'
+    }
+
+    bubble.innerText = teks
+    baris.appendChild(bubble)
+
+    if (meta) {
+      const labelMeta = document.createElement('div')
+      labelMeta.style.fontSize = '0.72rem'
+      labelMeta.style.color = 'var(--text-muted)'
+      labelMeta.style.marginTop = '0.25rem'
+      labelMeta.innerText = `${pengirim} ${meta}`
+      baris.appendChild(labelMeta)
+    }
+
+    box.appendChild(baris)
+    box.scrollTop = box.scrollHeight
+  }
+</script>
+
+<%- include('footer') %>

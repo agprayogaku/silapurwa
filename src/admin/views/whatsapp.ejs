@@ -1,0 +1,172 @@
+<%- include('header') %>
+
+<div class="page-head">
+  <div>
+    <h1>Integrasi WhatsApp</h1>
+    <p class="lead">Hubungkan nomor WhatsApp bot dengan memindai kode QR, atau gunakan kode pairing.</p>
+  </div>
+  <div class="page-actions">
+    <span id="badge-status" class="badge badge-neutral">memuat...</span>
+  </div>
+</div>
+
+<% if (pesan) { %>
+  <div class="alert alert-success"><%- ikon('centang') %> <span><%= pesan %></span></div>
+<% } %>
+<% if (error) { %>
+  <div class="alert alert-danger"><%- ikon('peringatan') %> <span><%= error %></span></div>
+<% } %>
+
+<div class="grid grid-main">
+
+  <!-- Kolom QR -->
+  <div class="card" style="text-align: center;">
+    <div class="card-head" style="justify-content: center;">
+      <div class="card-title"><%- ikon('whatsapp') %> Pindai Kode QR</div>
+    </div>
+
+    <div id="kotak-qr" style="min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 1rem;">
+      <div id="qr-placeholder" class="muted" style="font-size: 0.9rem; max-width: 320px;">
+        Belum ada kode QR. Klik <strong>Hubungkan WhatsApp</strong> untuk memulai sesi.
+      </div>
+      <img id="qr-image" alt="Kode QR WhatsApp" src="" style="display: none; width: 300px; height: 300px; image-rendering: pixelated; background: #fff; padding: 10px; border-radius: 10px;" />
+      <div id="kode-pairing" style="display: none; margin-top: 1rem; width: 100%;">
+        <div class="muted" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Kode Pairing (masukkan di WhatsApp)</div>
+        <div id="teks-pairing" style="font-size: 2rem; font-weight: 700; letter-spacing: 0.3rem; color: var(--accent); font-family: ui-monospace, monospace;"></div>
+      </div>
+    </div>
+
+    <p id="pesan-status" class="muted" style="font-size: 0.82rem; margin-top: 0.85rem;"></p>
+
+    <div style="display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.1rem; flex-wrap: wrap;">
+      <form method="POST" action="/whatsapp/hubungkan">
+        <button type="submit" class="btn btn-primary"><%- ikon('whatsapp') %> Hubungkan WhatsApp</button>
+      </form>
+      <form method="POST" action="/whatsapp/putus" onsubmit="return confirm('Hentikan koneksi WhatsApp? Sesi tetap tersimpan.')">
+        <button type="submit" class="btn btn-secondary">Putuskan</button>
+      </form>
+      <form method="POST" action="/whatsapp/logout" onsubmit="return confirm('Hapus sesi WhatsApp? Anda perlu memindai QR baru setelah ini.')">
+        <button type="submit" class="btn btn-danger">Hapus Sesi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Kolom info & pairing -->
+  <div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><%- ikon('info') %> Informasi Koneksi</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><th style="width: 42%;">Status</th><td id="info-status">-</td></tr>
+            <tr><th>Nomor Bot</th><td id="info-nomor">-</td></tr>
+            <tr><th>Perangkat</th><td id="info-perangkat">-</td></tr>
+            <tr><th>Diperbarui</th><td id="info-sejak">-</td></tr>
+            <tr><th>Sesi Tersimpan</th><td id="info-sesi"><%= adaSesi ? 'Ada (perangkat pernah tertaut)' : 'Belum ada' %></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="help-text" style="margin-top: 0.75rem;">
+        Status diperbarui otomatis setiap 2 detik. Bila QR kedaluwarsa, kode baru muncul sendiri.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><%- ikon('kunci') %> Alternatif: Kode Pairing</div>
+      </div>
+      <p class="muted" style="font-size: 0.85rem; margin-bottom: 0.85rem;">
+        Bila kamera tidak tersedia, masukkan nomor bot (format <code>628xxxxxxxxxx</code>) lalu gunakan kode 8 digit
+        di WhatsApp &rarr; <em>Perangkat Tertaut</em> &rarr; <em>Tautkan dengan nomor telepon</em>.
+      </p>
+      <form method="POST" action="/whatsapp/pairing">
+        <div class="form-group">
+          <label for="nomor">Nomor WhatsApp Bot</label>
+          <input type="text" id="nomor" name="nomor" placeholder="628123456789" required>
+        </div>
+        <button type="submit" class="btn btn-secondary"><%- ikon('kirim') %> Buat Kode Pairing</button>
+      </form>
+    </div>
+
+    <div class="card" style="border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.06);">
+      <div class="card-head">
+        <div class="card-title" style="color: #fbbf24;"><%- ikon('peringatan') %> Peringatan Keamanan</div>
+      </div>
+      <p class="muted" style="font-size: 0.84rem;">
+        Gunakan nomor perdana khusus bot, bukan nomor pribadi. Jangan bagikan kode QR/pairing ke orang lain.
+        Baileys adalah pustaka tidak resmi; baca <code>docs/analisis-risiko-baileys.md</code>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const els = {
+    badge: document.getElementById('badge-status'),
+    qrImage: document.getElementById('qr-image'),
+    placeholder: document.getElementById('qr-placeholder'),
+    pairingBox: document.getElementById('kode-pairing'),
+    pairingText: document.getElementById('teks-pairing'),
+    pesanStatus: document.getElementById('pesan-status'),
+    infoStatus: document.getElementById('info-status'),
+    infoNomor: document.getElementById('info-nomor'),
+    infoPerangkat: document.getElementById('info-perangkat'),
+    infoSejak: document.getElementById('info-sejak'),
+    infoSesi: document.getElementById('info-sesi')
+  }
+
+  const LABEL = {
+    terputus: 'Terputus', menghubungkan: 'Menghubungkan...', qr: 'Menunggu Pindai QR',
+    terhubung: 'Terhubung', keluar: 'Sesi Dihapus', galat: 'Gangguan'
+  }
+  const WARNA = {
+    terputus: 'badge-danger', menghubungkan: 'badge-warning', qr: 'badge-warning',
+    terhubung: 'badge-success', keluar: 'badge-neutral', galat: 'badge-danger'
+  }
+
+  let qrTerakhir = null
+
+  async function segarkan() {
+    try {
+      const res = await fetch('/whatsapp/status', { headers: { 'Accept': 'application/json' } })
+      const s = await res.json()
+      els.badge.className = 'badge ' + (WARNA[s.status] || 'badge-neutral')
+      els.badge.textContent = LABEL[s.status] || s.status
+
+      els.infoStatus.textContent = LABEL[s.status] || s.status
+      els.infoNomor.textContent = s.nomor || '-'
+      els.infoPerangkat.textContent = s.namaPerangkat || '-'
+      els.infoSejak.textContent = s.sejak ? new Date(s.sejak).toLocaleString('id-ID') : '-'
+      els.infoSesi.textContent = s.adaSesi ? 'Ada (perangkat pernah tertaut)' : 'Belum ada'
+      els.pesanStatus.textContent = s.pesanTerakhir || ''
+
+      if (s.qrDataUrl) {
+        if (s.qrDataUrl !== qrTerakhir) { els.qrImage.src = s.qrDataUrl; qrTerakhir = s.qrDataUrl }
+        els.qrImage.style.display = 'block'
+        els.placeholder.style.display = 'none'
+      } else {
+        els.qrImage.style.display = 'none'
+        els.placeholder.style.display = 'block'
+        els.placeholder.innerHTML = s.status === 'terhubung'
+          ? 'WhatsApp sudah terhubung. Bot siap menerima pesan.'
+          : 'Belum ada kode QR. Klik <strong>Hubungkan WhatsApp</strong> untuk memulai sesi.'
+      }
+
+      if (s.pairingCode) {
+        els.pairingBox.style.display = 'block'
+        els.pairingText.textContent = String(s.pairingCode).replace(/(.{4})/g, '$1 ').trim()
+      } else {
+        els.pairingBox.style.display = 'none'
+      }
+    } catch (e) {
+      els.pesanStatus.textContent = 'Gagal memuat status: ' + e.message
+    }
+  }
+
+  segarkan()
+  setInterval(segarkan, 2000)
+</script>
+
+<%- include('footer') %>
