@@ -5,7 +5,7 @@ Lapas Kelas IIB Purwakarta. Dibangun ringan (tanpa dependensi native) agar
 berjalan pada perangkat Windows spesifikasi rendah, dengan biaya operasional
 mendekati **Rp 0**.
 
-> Proyek ini merupakan bagian dari tugas akhir seleksi CPNS Kemenkumham.
+> Proyek ini merupakan bagian dari tugas akhir seleksi CPNS Kementerian Imigrasi dan Pemasyarakatan (Kemenimipas).
 
 ---
 
